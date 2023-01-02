@@ -12,7 +12,7 @@ import {
   calculateScoreFromType,
   CalculateScore,
   tallyPlayerScore,
-} from './Game';
+} from '@card-scoring/shared/Game';
 
 function defaultBidsForPlayers(players: Player[]): Record<Player, string> {
   return players.reduce((acc, player) => ({...acc, ...{[player]: '_'}}), {});

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Player } from './Game';
+import { Player } from '@card-scoring/shared/Game';
 
 type GameSetupSectionProps = {
   addPlayer: (p: Player) => void;

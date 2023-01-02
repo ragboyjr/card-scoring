@@ -161,3 +161,5 @@ export function calculateScoreFromType(type: ScoreCalculatorType): CalculateScor
 
   throw 'Unkown type';
 }
+
+export type GameState = "setup" | "playing" | "wow";

@@ -8,12 +8,12 @@ import {
   addValueToRound,
   emptyRound,
   nextRound,
-} from './Game';
+
+  GameState
+} from '@card-scoring/shared/Game';
 
 import { GamePlayingSection } from './GamePlay';
 import { GameSetupSection } from './GameSetup';
-
-export type GameState = "setup" | "playing";
 
 function OhHellGame() {
   const [gameState, setGameState] = useState<GameState>("setup");

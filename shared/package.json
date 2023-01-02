@@ -1,0 +1,19 @@
+{
+  "name": "@card-scoring/shared",
+  "version": "0.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.3"
+  },
+  "files": ["dist/**/*"],
+  "exports": {
+    "./*": "./dist/*"
+  },
+  "typesVersions": {
+    "*": {"*": ["dist/*"]}
+  }
+}
