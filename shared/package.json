@@ -2,18 +2,28 @@
   "name": "@card-scoring/shared",
   "version": "0.0.0",
   "description": "",
-  "type": "module",
   "scripts": {
     "build": "tsc -b"
   },
   "devDependencies": {
+    "react": "^18.2.0",
+    "@types/react": "^18.0.26",
     "typescript": "^4.8.3"
   },
-  "files": ["dist/**/*"],
+  "peerDependencies": {
+    "react": "^18.1.0"
+  },
+  "files": [
+    "dist/**/*"
+  ],
   "exports": {
     "./*": "./dist/*"
   },
   "typesVersions": {
-    "*": {"*": ["dist/*"]}
+    "*": {
+      "*": [
+        "dist/*"
+      ]
+    }
   }
 }

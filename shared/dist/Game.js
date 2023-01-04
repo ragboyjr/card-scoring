@@ -52,6 +52,9 @@ export function nextRound(round) {
     };
 }
 export function currentRound(rounds) {
+    if (rounds[0] === undefined) {
+        throw 'Could not retrieve current round.';
+    }
     return rounds[0];
 }
 export function addValueToRound(round, value) {

@@ -12,7 +12,8 @@
   "dependencies": {
     "@card-scoring/shared": "file:../shared/card-scoring-shared-0.0.0.tgz",
     "react": "18.1.0",
-    "react-native": "0.70.6"
+    "react-native": "0.70.6",
+    "react-native-dropdown-picker": "^5.4.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

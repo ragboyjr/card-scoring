@@ -27,4 +27,15 @@ export declare function tallyPlayerScore(rounds: Round[], player: Player, calcSc
 export type ScoreCalculatorType = 'ten-plus' | 'square-plus';
 export declare function calculateScoreFromType(type: ScoreCalculatorType): CalculateScore;
 export type GameState = "setup" | "playing" | "wow";
+export type GameApi = {
+    gameState: GameState;
+    players: Player[];
+    rounds: Round[];
+    startGame: () => void;
+    newGame: () => void;
+    addPlayer: (newPlayer: Player) => void;
+    removePlayer: (player: Player) => void;
+    resetRound: () => void;
+    addToRound: (value: number) => void;
+};
 //# sourceMappingURL=Game.d.ts.map

@@ -1,3 +1,4 @@
+// Player
 export type Player = string;
 export function playerPosition(players: Player[], player: Player) {
   return players.indexOf(player) + 1;
@@ -17,6 +18,7 @@ export function playerRoundMadeBid(pr: PlayerRound): "made"|"missed"|null {
   return pr.bid === pr.taken ? "made" : "missed";
 }
 
+// Rounds
 export type RoundPhase = 'bidding' | 'playing' | 'finished';
 export type Round = {
   number: number;
@@ -47,7 +49,11 @@ export function nextRound(round: Round): Round {
     }))
   }
 }
-export function currentRound(rounds: Round[]) {
+export function currentRound(rounds: Round[]): Round {
+  if (rounds[0] === undefined) {
+    throw 'Could not retrieve current round.';
+  }
+
   return rounds[0];
 }
 export function addValueToRound(round: Round, value: number): Round {
@@ -111,6 +117,7 @@ export function calculateRoundStats(round: Round): RoundStats {
   };
 }
 
+// Score Calculation
 export type CalculateScore = (p: PlayerRound) => number;
 function addTenOrZeroCalculateScore(p: PlayerRound): number {
   const bid = p.bid || 0;
@@ -163,3 +170,15 @@ export function calculateScoreFromType(type: ScoreCalculatorType): CalculateScor
 }
 
 export type GameState = "setup" | "playing" | "wow";
+
+export type GameApi = {
+  gameState: GameState;
+  players: Player[];
+  rounds: Round[];
+  startGame: () => void;
+  newGame: () => void;
+  addPlayer: (newPlayer: Player) => void;
+  removePlayer: (player: Player) => void;
+  resetRound: () => void;
+  addToRound: (value: number) => void;
+};

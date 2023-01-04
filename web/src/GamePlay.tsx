@@ -14,74 +14,23 @@ import {
   tallyPlayerScore,
 } from '@card-scoring/shared/Game';
 
-function defaultBidsForPlayers(players: Player[]): Record<Player, string> {
-  return players.reduce((acc, player) => ({...acc, ...{[player]: '_'}}), {});
-}
+import { useBiddingApi } from '@card-scoring/shared/hooks';
 
 function RoundValuesSection(props: {currentRound: Round, resetRound: () => void, addRoundValue: (number: number) => void}) {
-  const allPlayers = props.currentRound.playerRounds.map(pr => pr.player);
-  const [bids, setBids] = useState<Record<Player, string>>(defaultBidsForPlayers(allPlayers));
-  const roundStats = calculateRoundStats(props.currentRound);
-
-  function handleBidChange(player: Player, direction: "up"|"down") {
-    return (event: React.MouseEvent<HTMLButtonElement>) => {
-      const inputElement = direction === "up"
-        ? event.currentTarget.previousElementSibling
-        : event.currentTarget.nextElementSibling;
-      if (inputElement instanceof HTMLInputElement === false) {
-        throw 'Could not find button input element.';
-      }
-      const curValue = (inputElement as HTMLInputElement).value;
-      const modifiedValue = ((): string => {
-        if (curValue === "_") { return '0'; }
-        const numericValue = Number.parseInt(curValue);
-        if (Number.isNaN(numericValue)) { return '0'; }
-
-        return Math.max(direction === "up" ? numericValue + 1 : numericValue - 1, 0).toString()
-      })();
-      setBids((bids) => ({...bids, ...{[player]: modifiedValue}}));
-    }
-  }
-
-  function allBidsSet(): boolean {
-    return !Object.entries(bids).some(([k, v]) => Number.isNaN(Number.parseInt(v)))
-  }
-  function allBidsSumToAvailableBids(): boolean {
-    return roundStats.availableBids === Object.values(bids).map(i => Number.parseInt(i)).reduce((acc, i) => acc + i, 0);
-  }
-
-  function canFinishBiddingTaking(): boolean {
-    return (props.currentRound.phase === "bidding" && allBidsSet())
-      || (props.currentRound.phase === "playing" && allBidsSumToAvailableBids());
-  }
-
-  function handleFinishBidding() {
-    if (!canFinishBiddingTaking()) {
-      return;
-    }
-
-    for (let player of allPlayers) {
-      props.addRoundValue(Number.parseInt(bids[player]));
-    }
-
-    if (props.currentRound.phase !== "bidding") {
-      setBids(defaultBidsForPlayers(allPlayers));
-    }
-  }
-
+  const biddingApi = useBiddingApi(props.currentRound, props.addRoundValue)
   return <>
     <div className="row gx-2 justify-content-center mt-2">
-      {props.currentRound.playerRounds.map(pr => <div className='col-4 col-sm-3' key={pr.player}>
-        <div className="text-center">{pr.player}</div>
+      {biddingApi.allPlayers.map(player => <div className='col-4 col-sm-3' key={player}>
+        <div className="text-center">{player}</div>
         <form className="input-group" onSubmit={e => e.preventDefault()}>
-          <button className="btn btn-outline-secondary" type="button" onClick={handleBidChange(pr.player, "down")}>-</button>
+          <button className="btn btn-outline-secondary" type="button" onClick={() => biddingApi.changeBid(player, "down")}>-</button>
           <input
             type="text"
             className="form-control text-center"
             readOnly
-            value={bids[pr.player]}
+            value={biddingApi.bids[player] === null ? '_' : (biddingApi.bids[player] || 0)}
           />
-          <button className="btn btn-outline-secondary" type="button" onClick={handleBidChange(pr.player, "up")}>+</button>
+          <button className="btn btn-outline-secondary" type="button" onClick={() => biddingApi.changeBid(player, "up")}>+</button>
         </form>
       </div>)}
     </div>
@@ -90,7 +39,7 @@ function RoundValuesSection(props: {currentRound: Round, resetRound: () => void,
         <button className='btn btn-danger' onClick={props.resetRound}>Reset Round</button>
       </div>}
       <div className='col-auto'>
-        <button className='btn btn-success' onClick={handleFinishBidding} disabled={!canFinishBiddingTaking()}>
+        <button className='btn btn-success' onClick={biddingApi.finishBiddingTaking} disabled={!biddingApi.canFinishBiddingTaking()}>
           {props.currentRound.phase === "bidding" ? 'Bid' : 'Finish'}
         </button>
       </div>
